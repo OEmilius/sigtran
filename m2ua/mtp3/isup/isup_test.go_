@@ -1,0 +1,96 @@
+package isup
+
+import (
+	"encoding/hex"
+	"fmt"
+	"testing"
+)
+
+//full mtp3 message c5214179c05c00010060010a00020907031094958864600801000a070311949538236700
+var iam string = "5c00010060010a00020907031094958864600801000a070311949538236700"
+var iam2 string = "c5c24079e0ae01010048000a03020907039069656501890801000a070313944962208300"
+var big_iam string = "3e00010048000a03020907039019960348400801000a07031394656472932807011094255232010b070110942552320113020331000000"
+var rlc string = "c5e5015be06e031000"
+var rel string = "62000c0200028090"
+
+//func Test_chek_len(t *testing.T) {
+//	h, _ := hex.DecodeString("5c000")
+//	if isup, ok := Decode(h); ok {
+//		fmt.Println("проверка длинны не работает")
+//		fmt.Println(isup, ok)
+//	} else {
+//		fmt.Println("проверка длинны работает")
+//	}
+//}
+
+func Test_strange_message(t *testing.T) {
+	//[33 64 170 187 204 221
+	h, _ := hex.DecodeString("2140")
+	isup := Decode_ISUP(h)
+	fmt.Println(isup.CIC)
+
+}
+
+func Example_Decode_ISUP() {
+	h, _ := hex.DecodeString(iam)
+	isup := Decode_ISUP(h)
+	fmt.Println(isup.CIC)
+	fmt.Println(isup.Message_type_code)
+	//Output:92
+	//1
+}
+
+func Test_decode_isup_REL(t *testing.T) {
+	h, _ := hex.DecodeString(rel)
+	isup := Decode_ISUP(h)
+	fmt.Println(&isup)
+}
+
+func Test_decodeIAM(t *testing.T) {
+	h, _ := hex.DecodeString(iam)
+	m := Decode_ISUP(h)
+	fmt.Println(&m)
+}
+
+func Example_Called_party_number() {
+	var iam_str string = "5c00010060010a00020907031094958864600801000a070311949538236700"
+	h, _ := hex.DecodeString(iam_str)
+	isup := Decode_ISUP(h)
+	fmt.Println(isup.Called_party_number())
+	//Output: 4959884606
+}
+
+func Example_Calling_party_number() {
+	//var iam_str string = "5c00010060010a00020907031094958864600801000a070311949538236700"
+	//var iam_str string = "b900010020010a03020a08839094250837180f0a07031394751844001d039090a303041e0281833d011f39023dc000"
+	var iam_str string = "a200010060010a00020907031094952690310801000a070313942508605700"
+	h, _ := hex.DecodeString(iam_str)
+	isup := Decode_ISUP(h)
+	fmt.Println(isup.Calling_party_number())
+	//Output: 4959833276
+}
+
+//func Test_decode_optional_part(t *testing.T) {
+//	h, _ := hex.DecodeString("0801000a070313942508209800")
+//	//must be{{8 1 [0]} {10 7 [3 19 148 37 8 32 152]}}
+//	fmt.Println("optional part slice", decode_optional_part(h))
+//}
+
+//func Test_decode_optional_part2(t *testing.T) {
+//	h, _ := hex.DecodeString("0801000a07031394656472932807011094255232010b070110942552320113020331000000")
+//	//must be [{8 1 [0]} {10 7 [3 19 148 101 100 114 147]} {40 7 [1 16 148 37 82 50 1]} {11 7 [1 16 148 37 82 50 1]} {19 2 [3 49]}]
+//	fmt.Println("optional part slice", decode_optional_part(h))
+//}
+
+//func Test_print_Numbers(t *testing.T) {
+//	h, _ := hex.DecodeString(iam)
+//	if isup, ok := Decode(h); ok {
+//		if isup.Code == 1 { //code 1 имеет iam
+//			iam := DecodeIAM(h)
+//			fmt.Println("called", iam.Called_Party_Number.Number)
+//			fmt.Println("calling", iam.Calling_Party_Number.Number)
+//		}
+//	} else {
+//		fmt.Println("this is not IAM message")
+//	}
+//}

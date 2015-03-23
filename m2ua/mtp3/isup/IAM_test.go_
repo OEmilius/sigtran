@@ -1,0 +1,19 @@
+package isup
+
+import (
+	"encoding/hex"
+	"fmt"
+	//"testing"
+)
+
+func Example_DecodeIAM() {
+	h, _ := hex.DecodeString("5c00010060010a00020907031094958864600801000a070311949538236700")
+	isup := DecodeISUP(h)
+	if isup.Message_type() == "IAM" { //iam
+		iam := DecodeIAM(h)
+		fmt.Print(&isup)
+		fmt.Println(&iam)
+	}
+	//Output:92
+	//1
+}
